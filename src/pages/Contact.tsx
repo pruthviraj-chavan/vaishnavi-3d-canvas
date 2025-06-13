@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
-import { Mail, Phone, MapPin, Linkedin, Github, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Github, Send, MessageCircle } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +13,9 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+
+  const phoneNumber = '+91 93591 66521';
+  const whatsappNumber = '919359166521'; // WhatsApp format (without + and spaces)
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -46,8 +48,17 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+    // Create WhatsApp message with form data
+    const whatsappMessage = `Hi Vaishnavi!
+
+Name: ${formData.name}
+Email: ${formData.email}
+Subject: ${formData.subject}
+
+Message: ${formData.message}`;
+    
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   const contactInfo = [
@@ -60,10 +71,17 @@ const Contact = () => {
     },
     {
       icon: Phone,
-      title: "Phone",
-      value: "+91 12345 67890",
-      link: "tel:+911234567890",
+      title: "Phone / WhatsApp",
+      value: phoneNumber,
+      link: `https://wa.me/${whatsappNumber}`,
       color: "from-green-500 to-teal-600"
+    },
+    {
+      icon: MessageCircle,
+      title: "WhatsApp",
+      value: "Quick Message",
+      link: `https://wa.me/${whatsappNumber}?text=Hi%20Vaishnavi!%20I%20would%20like%20to%20connect%20with%20you.`,
+      color: "from-green-600 to-emerald-600"
     },
     {
       icon: MapPin,
@@ -109,6 +127,8 @@ const Contact = () => {
                 <motion.a
                   key={index}
                   href={info.link}
+                  target={info.link.startsWith('http') ? '_blank' : undefined}
+                  rel={info.link.startsWith('http') ? 'noopener noreferrer' : undefined}
                   whileHover={{ scale: 1.02 }}
                   className="block group"
                 >
@@ -134,6 +154,8 @@ const Contact = () => {
                 <div className="flex space-x-4">
                   <motion.a
                     href="https://github.com/vaishnavi-kapse"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1 }}
                     className="w-12 h-12 bg-gradient-to-r from-gray-600 to-gray-800 rounded-full flex items-center justify-center hover:shadow-lg transition-all duration-300"
                   >
@@ -141,10 +163,21 @@ const Contact = () => {
                   </motion.a>
                   <motion.a
                     href="https://linkedin.com/in/vaishnavi-kapse"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1 }}
                     className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full flex items-center justify-center hover:shadow-lg transition-all duration-300"
                   >
                     <Linkedin className="w-6 h-6 text-white" />
+                  </motion.a>
+                  <motion.a
+                    href={`https://wa.me/${whatsappNumber}?text=Hi%20Vaishnavi!%20I%20found%20your%20portfolio%20and%20would%20like%20to%20connect.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1 }}
+                    className="w-12 h-12 bg-gradient-to-r from-green-600 to-green-800 rounded-full flex items-center justify-center hover:shadow-lg transition-all duration-300"
+                  >
+                    <MessageCircle className="w-6 h-6 text-white" />
                   </motion.a>
                 </div>
               </motion.div>
@@ -154,7 +187,8 @@ const Contact = () => {
             <motion.div variants={itemVariants} className="lg:col-span-2">
               <Card className="glass dark:glass-dark hover:shadow-2xl transition-all duration-300">
                 <CardHeader>
-                  <CardTitle className="text-2xl text-gradient">Send Me a Message</CardTitle>
+                  <CardTitle className="text-2xl text-gradient">Send Me a WhatsApp Message</CardTitle>
+                  <p className="text-muted-foreground">Fill out the form below and it will be sent to my WhatsApp</p>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -224,12 +258,32 @@ const Contact = () => {
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                       <Button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-tech-blue to-tech-purple hover:from-tech-purple hover:to-tech-teal text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                        className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center space-x-2"
                       >
-                        <Send className="w-5 h-5" />
-                        <span>Send Message</span>
+                        <MessageCircle className="w-5 h-5" />
+                        <span>Send via WhatsApp</span>
                       </Button>
                     </motion.div>
+
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground mb-4">Or contact me directly:</p>
+                      <motion.a
+                        href={`https://wa.me/${whatsappNumber}?text=Hi%20Vaishnavi!%20I%20would%20like%20to%20discuss%20a%20project%20with%20you.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white"
+                        >
+                          <MessageCircle className="w-4 h-4 mr-2" />
+                          Quick WhatsApp: {phoneNumber}
+                        </Button>
+                      </motion.a>
+                    </div>
                   </form>
                 </CardContent>
               </Card>

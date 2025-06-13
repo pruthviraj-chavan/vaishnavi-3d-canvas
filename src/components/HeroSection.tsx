@@ -1,14 +1,16 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './ui/button';
 import { Link } from 'react-router-dom';
-import { Download, Sparkles, Code2, Database, User } from 'lucide-react';
+import { Download, Sparkles, Code2, Database, User, MessageCircle } from 'lucide-react';
 import AgenticAISection from './AgenticAISection';
 import DataAnalystSection from './DataAnalystSection';
 import JourneySection from './JourneySection';
 
 const HeroSection = () => {
+  const phoneNumber = '+91 93591 66521';
+  const whatsappNumber = '919359166521'; // WhatsApp format
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -112,7 +114,28 @@ const HeroSection = () => {
                   <Button 
                     variant="outline" 
                     size="lg"
-                    className="w-full sm:w-auto border-2 border-tech-blue text-tech-blue hover:bg-tech-blue hover:text-white px-8 lg:px-10 py-3 lg:py-4 rounded-full font-semibold text-base lg:text-lg"
+                    className="w-full sm:w-auto border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white px-8 lg:px-10 py-3 lg:py-4 rounded-full font-semibold text-base lg:text-lg"
+                    onClick={() => {
+                      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=Hi%20Vaishnavi!%20I%20found%20your%20portfolio%20and%20would%20like%20to%20connect%20with%20you.`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
+                    <MessageCircle className="w-4 lg:w-5 h-4 lg:h-5 mr-2" />
+                    WhatsApp Me
+                  </Button>
+                </motion.div>
+              </motion.div>
+
+              {/* Additional CTA for Resume */}
+              <motion.div 
+                variants={itemVariants}
+                className="flex justify-center lg:justify-start"
+              >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button 
+                    variant="ghost" 
+                    size="lg"
+                    className="border border-tech-blue text-tech-blue hover:bg-tech-blue hover:text-white px-6 lg:px-8 py-2 lg:py-3 rounded-full font-medium"
                     onClick={() => {
                       const link = document.createElement('a');
                       link.href = '/resume.pdf';
@@ -120,7 +143,7 @@ const HeroSection = () => {
                       link.click();
                     }}
                   >
-                    <Download className="w-4 lg:w-5 h-4 lg:h-5 mr-2" />
+                    <Download className="w-4 h-4 mr-2" />
                     Download Resume
                   </Button>
                 </motion.div>
