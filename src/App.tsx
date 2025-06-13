@@ -1,4 +1,5 @@
 
+import React, { Suspense } from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,15 +8,25 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Navigation from "./components/Navigation";
 import Background3D from "./components/Background3D";
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Skills from "./pages/Skills";
-import Projects from "./pages/Projects";
-import Experience from "./pages/Experience";
-import Contact from "./pages/Contact";
-import NotFound from "./pages/NotFound";
+import LoadingSpinner from "./components/LoadingSpinner";
 
-const queryClient = new QueryClient();
+// Lazy load pages for better performance
+const Index = React.lazy(() => import("./pages/Index"));
+const About = React.lazy(() => import("./pages/About"));
+const Skills = React.lazy(() => import("./pages/Skills"));
+const Projects = React.lazy(() => import("./pages/Projects"));
+const Experience = React.lazy(() => import("./pages/Experience"));
+const Contact = React.lazy(() => import("./pages/Contact"));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -27,15 +38,17 @@ const App = () => (
           <div className="min-h-screen bg-background text-foreground relative transition-colors duration-300">
             <Background3D />
             <Navigation />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/skills" element={<Skills />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/experience" element={<Experience />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/skills" element={<Skills />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/experience" element={<Experience />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </div>
         </BrowserRouter>
       </TooltipProvider>
